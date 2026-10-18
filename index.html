@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赛博科研贡台 - 语言学特别加持版</title>
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff0055;
+            --neon-gold: #ffcc00;
+            --bg-dark: #0a0a12;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(20, 20, 35, 0.85);
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+            margin-bottom: 5px;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: #8a8a9e;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .altar-display {
+            position: relative;
+            height: 290px; /* 增加整体高度，给全息神明和香火充足空间 */
+            background: radial-gradient(circle, #1a1a3a 0%, #0d0d1a 100%);
+            border: 2px solid var(--neon-pink);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+
+        /* 赛博语言学十字架全息投影 */
+        .cyber-deity-container {
+            position: absolute;
+            top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: floatDeity 3s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        .hologram-svg {
+            width: 70px;
+            height: 70px;
+            filter: drop-shadow(0 0 8px var(--neon-blue)) drop-shadow(0 0 18px var(--neon-blue));
+        }
+
+        .deity-name {
+            font-size: 0.7rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 6px var(--neon-blue);
+            letter-spacing: 2px;
+            margin-top: 2px;
+            background: rgba(10, 10, 20, 0.85);
+            padding: 3px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        @keyframes floatDeity {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* 修复重叠：下移香火位置 */
+        .incense-container {
+            position: absolute;
+            top: 135px; /* 下移避开全息神明标签 */
+            display: flex;
+            gap: 16px;
+            z-index: 2;
+        }
+
+        .incense-stick {
+            width: 4px;
+            height: 38px;
+            background: #883333;
+            position: relative;
+        }
+
+        .incense-glow {
+            width: 6px;
+            height: 6px;
+            background: #ff5500;
+            border-radius: 50%;
+            position: absolute;
+            top: -3px;
+            left: -1px;
+            box-shadow: 0 0 8px #ff5500, 0 0 12px #ffcc00;
+        }
+
+        .offering-table {
+            display: flex;
+            gap: 15px;
+            z-index: 2;
+            background: rgba(255,255,255,0.05);
+            padding: 8px 25px;
+            border-radius: 40px;
+            border-bottom: 3px solid var(--neon-gold);
+            max-width: 90%;
+            overflow-x: auto;
+        }
+
+        .offering-item {
+            font-size: 2.1rem;
+            filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.5));
+            transition: transform 0.2s;
+        }
+
+        .offering-item:hover {
+            transform: scale(1.25);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: #16162a;
+            border: 1px solid var(--neon-blue);
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .btn.active {
+            border-color: var(--neon-gold);
+            background: rgba(255, 204, 0, 0.2);
+            color: var(--neon-gold);
+        }
+
+        .btn-clear {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+        .btn-clear:hover {
+            background: var(--neon-pink);
+            color: #fff;
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .action-area {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+        }
+
+        .stats {
+            font-size: 1.1rem;
+            color: var(--neon-gold);
+        }
+
+        .blessing-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 243, 255, 0.05);
+            border-left: 4px solid var(--neon-blue);
+            border-radius: 4px;
+            text-align: left;
+            font-style: italic;
+            min-height: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⛩️ 赛博科研贡台 ⛩️</h1>
+    <div class="subtitle">语言学 PhD 祈福加持</div>
+
+    <div class="altar-display">
+        <!-- 悬浮的赛博语言学十字架之神 -->
+        <div class="cyber-deity-container">
+            <svg class="hologram-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="scanlines" width="100" height="4" patternUnits="userSpaceOnUse">
+                        <line x1="0" y1="0" x2="100" y2="0" stroke="rgba(0,0,0,0.4)" stroke-width="2"/>
+                    </pattern>
+                </defs>
+                <g stroke="#00f3ff" stroke-width="3.5" stroke-linecap="round" fill="none">
+                    <line x1="50" y1="18" x2="50" y2="78" />
+                    <line x1="50" y1="40" x2="25" y2="50" />
+                    <line x1="50" y1="40" x2="75" y2="50" />
+                </g>
+                <g fill="#00f3ff">
+                    <circle cx="50" cy="18" r="9.5" />
+                    <circle cx="23" cy="51" r="8.5" />
+                    <circle cx="77" cy="51" r="8.5" />
+                </g>
+                <polygon points="50,64 39,78 61,78" fill="#00f3ff" />
+                <rect width="100" height="100" fill="url(#scanlines)" opacity="0.6"/>
+            </svg>
+            <div class="deity-name">✝ 语言学全息之神 ✝</div>
+        </div>
+
+        <!-- 下移后的香火组件 -->
+        <div class="incense-container">
+            <div class="incense-stick"><div class="incense-glow"></div></div>
+            <div class="incense-stick"><div class="incense-glow"></div></div>
+            <div class="incense-stick"><div class="incense-glow"></div></div>
+        </div>
+
+        <div class="offering-table" id="altarTable">
+            <!-- 动态渲染贡品 -->
+        </div>
+    </div>
+
+    <h3>选择贡品（点击上供，最多6件）</h3>
+    <div class="controls" id="offeringSelector"></div>
+
+    <div style="text-align: right; margin-bottom: 15px;">
+        <button class="btn btn-clear" onclick="clearOfferings()" style="padding: 6px 15px; font-size: 0.85rem;">🗑️ 一键清空贡品</button>
+    </div>
+
+    <div class="action-area">
+        <button class="btn" style="border-color: var(--neon-pink);" onclick="pray()">敲木鱼 (+功德)</button>
+        <div class="stats">科研功德: <span id="meritCount">5.98</span></div>
+        <button class="btn" style="border-color: var(--neon-gold);" onclick="drawFortune()">求科研签</button>
+    </div>
+
+    <div class="blessing-box" id="blessingText">
+        🙏 语言学十字架全息投影显灵：顺利 Accept！
+    </div>
+</div>
+
+<script>
+    const offeringsData = [
+        { id: 'paper', name: 'WoS/ВАК 论文', icon: '📄' },
+        { id: 'mcdonalds', name: '麦当劳套餐', icon: '🍔' },
+        { id: 'coffee', name: '冰美式续命', icon: '☕' },
+        { id: 'code', name: '0 bug 代码', icon: '💻' },
+        { id: 'pvalue', name: 'p < 0.05 显著签', icon: '📊' },
+        { id: 'tea', name: '俄式红茶', icon: '🫖' },
+        { id: 'kvass', name: '冰镇格瓦斯', icon: '🍺' },
+        { id: 'latiao', name: '卫龙辣条', icon: '🌶️' },
+        { id: 'sausage', name: '俄式大红肠', icon: '🌭' },
+        { id: 'advisor', name: '审稿人的肯定', icon: '👍' }
+    ];
+
+    const blessings = [
+        "【大吉】语料对齐率 100%，卡方检验 p < 0.001 完全显著！",
+        "【上签】审稿人意见极其温和，疯狂夸赞你的方法论设计！",
+        "【加持】Python 提取特征无任何 NaN 缺失值，运行一路绿灯！",
+        "【顺利】论文盲审高分通过，导师回复：'Отлично, отправляем в печать!'",
+        "【显灵】莱考夫和韩礼德护体，理论框架无懈可击！"
+    ];
+
+    let selectedOfferings = ['paper', 'coffee', 'kvass', 'latiao'];
+    let merit = 5.98;
+
+    function renderSelector() {
+        const container = document.getElementById('offeringSelector');
+        container.innerHTML = offeringsData.map(item => {
+            const isSelected = selectedOfferings.includes(item.id);
+            return `<button class="btn ${isSelected ? 'active' : ''}" onclick="toggleOffering('${item.id}')">
+                ${item.icon} ${item.name}
+            </button>`;
+        }).join('');
+    }
+
+    function renderAltar() {
+        const table = document.getElementById('altarTable');
+        if (selectedOfferings.length === 0) {
+            table.innerHTML = `<span style="color: #666; font-size: 0.9rem; font-style: italic;">贡台空空如也，请选择上方贡品上供……</span>`;
+            return;
+        }
+        table.innerHTML = selectedOfferings.map(id => {
+            const item = offeringsData.find(o => o.id === id);
+            return `<div class="offering-item" title="${item.name}">${item.icon}</div>`;
+        }).join('');
+    }
+
+    function toggleOffering(id) {
+        if (selectedOfferings.includes(id)) {
+            selectedOfferings = selectedOfferings.filter(i => i !== id);
+        } else {
+            if (selectedOfferings.length < 6) {
+                selectedOfferings.push(id);
+            } else {
+                alert('贡台位置有限，最多同时上供 6 件贡品！');
+            }
+        }
+        renderSelector();
+        renderAltar();
+    }
+
+    function clearOfferings() {
+        selectedOfferings = [];
+        renderSelector();
+        renderAltar();
+        document.getElementById('blessingText').innerText = "🙏 贡台已清空，请重新挑选心仪的科研贡品向语言学全息之神上供。";
+    }
+
+    function pray() {
+        merit = parseFloat((merit + 0.1).toFixed(2));
+        document.getElementById('meritCount').innerText = merit;
+    }
+
+    function drawFortune() {
+        const randomIdx = Math.floor(Math.random() * blessings.length);
+        document.getElementById('blessingText').innerText = blessings[randomIdx];
+    }
+
+    renderSelector();
+    renderAltar();
+</script>
+</body>
+</html>

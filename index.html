@@ -219,7 +219,7 @@
 
 <div class="container">
     <h1>⛩️ 科研赛博寺庙 ⛩️</h1>
-    <div class="subtitle">语言学 PhD 祈福加持</div>
+    <div class="subtitle">Linguistic bless you</div>
 
     <div class="altar-display">
         <!-- 悬浮的赛博语言学十字架之神 -->
@@ -254,39 +254,39 @@
         </div>
 
         <div class="offering-table" id="altarTable">
-            <!-- 动态渲染贡品 -->
+            <!-- 动态渲染供品 -->
         </div>
     </div>
 
-    <h3>选择贡品（点击上供，最多6件）</h3>
+    <h3>选择供品（点击上供，最多6件）</h3>
     <div class="controls" id="offeringSelector"></div>
 
     <div style="text-align: right; margin-bottom: 15px;">
-        <button class="btn btn-clear" onclick="clearOfferings()" style="padding: 6px 15px; font-size: 0.85rem;">🗑️ 一键清空贡品</button>
+        <button class="btn btn-clear" onclick="clearOfferings()" style="padding: 6px 15px; font-size: 0.85rem;">🗑️ 一键清空供品</button>
     </div>
 
     <div class="action-area">
-        <button class="btn" style="border-color: var(--neon-pink);" onclick="pray()">敲木鱼 (+功德)</button>
-        <div class="stats">科研功德: <span id="meritCount">5.98</span></div>
+        <button class="btn" style="border-color: var(--neon-pink);" onclick="pray()">敲木鱼 (+Accept)</button>
+        <div class="stats">Accept功德: <span id="meritCount">5.98</span></div>
         <button class="btn" style="border-color: var(--neon-gold);" onclick="drawFortune()">求科研签</button>
     </div>
 
     <div class="blessing-box" id="blessingText">
-        🙏 语言学十字架全息投影显灵：顺利 Accept！
+        🙏 语言学全息之神显灵：顺利 Accept！
     </div>
 </div>
 
 <script>
     const offeringsData = [
         { id: 'paper', name: 'WoS/ВАК 论文', icon: '📄' },
-        { id: 'mcdonalds', name: '麦当劳套餐', icon: '🍔' },
-        { id: 'coffee', name: '冰美式续命', icon: '☕' },
+        { id: 'mcdonalds', name: '金拱门套餐', icon: '🍔' },
+        { id: 'coffee', name: '冰美式', icon: '☕' },
         { id: 'code', name: '0 bug 代码', icon: '💻' },
         { id: 'pvalue', name: 'p < 0.05 显著签', icon: '📊' },
         { id: 'tea', name: '俄式红茶', icon: '🫖' },
         { id: 'kvass', name: '冰镇格瓦斯', icon: '🍺' },
         { id: 'latiao', name: '卫龙辣条', icon: '🌶️' },
-        { id: 'sausage', name: '俄式大红肠', icon: '🌭' },
+        { id: 'sausage', name: '俄式大列巴', icon: '🥖' },
         { id: 'advisor', name: '审稿人的肯定', icon: '👍' }
     ];
 
@@ -314,7 +314,7 @@
     function renderAltar() {
         const table = document.getElementById('altarTable');
         if (selectedOfferings.length === 0) {
-            table.innerHTML = `<span style="color: #666; font-size: 0.9rem; font-style: italic;">贡台空空如也，请选择上方贡品上供……</span>`;
+            table.innerHTML = `<span style="color: #666; font-size: 0.9rem; font-style: italic;">供台空空如也，请选择上方贡品上供……</span>`;
             return;
         }
         table.innerHTML = selectedOfferings.map(id => {
@@ -330,7 +330,7 @@
             if (selectedOfferings.length < 6) {
                 selectedOfferings.push(id);
             } else {
-                alert('贡台位置有限，最多同时上供 6 件贡品！');
+                alert('供台位置有限，最多同时上供 6 件供品！');
             }
         }
         renderSelector();
@@ -341,7 +341,7 @@
         selectedOfferings = [];
         renderSelector();
         renderAltar();
-        document.getElementById('blessingText').innerText = "🙏 贡台已清空，请重新挑选心仪的科研贡品向语言学全息之神上供。";
+        document.getElementById('blessingText').innerText = "🙏 供台已清空，请重新挑选心仪的科研供品向语言学全息之神上供。";
     }
 
     function pray() {

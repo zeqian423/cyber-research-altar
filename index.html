@@ -331,7 +331,7 @@
     <div class="controls" id="offeringSelector"></div>
 
     <div style="text-align: right; margin-bottom: 15px;">
-        <button class="btn btn-clear" onclick="clearOfferings()" style="padding: 6px 15px; font-size: 0.85rem;">🗑️ 一键清空供品与愿望</button>
+        <button class="btn btn-clear" onclick="clearOfferings()" style="padding: 6px 15px; font-size: 0.85rem;">再次许愿</button>
     </div>
 
     <div class="action-area">
@@ -371,7 +371,7 @@
 
     // 从 localStorage 恢复数据，若无则使用默认值
     let selectedOfferings = JSON.parse(localStorage.getItem('cyberAltar_offerings')) || ['paper', 'coffee', 'kvass', 'latiao'];
-    let savedWish = localStorage.getItem('cyberAltar_wish') || '保佑 5.9.8 对比语言学论文顺利 Accept，语料对齐全线显著！';
+    let savedWish = localStorage.getItem('cyberAltar_wish') || '保佑论文顺利Accept！';
     let merit = parseFloat(localStorage.getItem('cyberAltar_merit')) || 5.98;
 
     function initUserWish() {

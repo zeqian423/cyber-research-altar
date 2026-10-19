@@ -51,6 +51,40 @@
             margin-bottom: 20px;
         }
 
+        /* 许愿池区域 */
+        .wish-section {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .wish-section label {
+            font-size: 0.85rem;
+            color: var(--neon-gold);
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .wish-input {
+            width: 100%;
+            background: rgba(10, 10, 20, 0.7);
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            border-radius: 8px;
+            color: #fff;
+            padding: 10px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .wish-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+        }
+
         .altar-display {
             position: relative;
             height: 290px;
@@ -250,6 +284,12 @@
     <h1>⛩️ 科研赛博寺庙 ⛩️</h1>
     <div class="subtitle">Linguistics bless you</div>
 
+    <!-- 许愿池输入区 -->
+    <div class="wish-section">
+        <label for="wishInput">✨ 许愿池（自动保存你的科研心愿）：</label>
+        <textarea id="wishInput" class="wish-input" rows="2" placeholder="在此写下你的科研愿望（如：保佑 5.9.8 对比语言学论文顺利 Accept！）" oninput="saveUserData()"></textarea>
+    </div>
+
     <div class="altar-display">
         <!-- 悬浮的赛博语言学十字架之神 -->
         <div class="cyber-deity-container">
@@ -275,7 +315,7 @@
             <div class="deity-name">✝ 语言学全息之神 ✝</div>
         </div>
 
-        <!-- 下移后的香火组件 -->
+        <!-- 香火组件 -->
         <div class="incense-container">
             <div class="incense-stick"><div class="incense-glow"></div></div>
             <div class="incense-stick"><div class="incense-glow"></div></div>
@@ -291,7 +331,7 @@
     <div class="controls" id="offeringSelector"></div>
 
     <div style="text-align: right; margin-bottom: 15px;">
-        <button class="btn btn-clear" onclick="clearOfferings()" style="padding: 6px 15px; font-size: 0.85rem;">🗑️ 一键清空供品</button>
+        <button class="btn btn-clear" onclick="clearOfferings()" style="padding: 6px 15px; font-size: 0.85rem;">🗑️ 一键清空供品与愿望</button>
     </div>
 
     <div class="action-area">
@@ -323,6 +363,117 @@
         "【大吉】语料对齐率 100%，卡方检验 p < 0.001 完全显著！",
         "【上签】审稿人意见极其温和，疯狂夸赞你的方法论设计！",
         "【加持】Python 提取特征无任何 NaN 缺失值，运行一路绿灯！",
+        "【顺利】论文盲审高分通过，导师回复：'Отлично, отправляем в печать!'",
+        "【显灵】莱考夫和韩礼德护体，理论框架无懈可击！"
+    ];
+
+    const floatPhrases = ["Accept +1", "Paper +1", "p < 0.05", "0 Bug", "功德 +1"];
+
+    // 从 localStorage 恢复数据，若无则使用默认值
+    let selectedOfferings = JSON.parse(localStorage.getItem('cyberAltar_offerings')) || ['paper', 'coffee', 'kvass', 'latiao'];
+    let savedWish = localStorage.getItem('cyberAltar_wish') || '保佑 5.9.8 对比语言学论文顺利 Accept，语料对齐全线显著！';
+    let merit = parseFloat(localStorage.getItem('cyberAltar_merit')) || 5.98;
+
+    function initUserWish() {
+        document.getElementById('wishInput').value = savedWish;
+        document.getElementById('meritCount').innerText = merit;
+    }
+
+    function saveUserData() {
+        const currentWish = document.getElementById('wishInput').value;
+        localStorage.setItem('cyberAltar_offerings', JSON.stringify(selectedOfferings));
+        localStorage.setItem('cyberAltar_wish', currentWish);
+        localStorage.setItem('cyberAltar_merit', merit);
+    }
+
+    function renderSelector() {
+        const container = document.getElementById('offeringSelector');
+        container.innerHTML = offeringsData.map(item => {
+            const isSelected = selectedOfferings.includes(item.id);
+            return `<button class="btn ${isSelected ? 'active' : ''}" onclick="toggleOffering('${item.id}')">
+                ${item.icon} ${item.name}
+            </button>`;
+        }).join('');
+    }
+
+    function renderAltar() {
+        const table = document.getElementById('altarTable');
+        if (selectedOfferings.length === 0) {
+            table.innerHTML = `<span style="color: #666; font-size: 0.9rem; font-style: italic;">供台空空如也，请选择下方供品上供……</span>`;
+            return;
+        }
+        table.innerHTML = selectedOfferings.map(id => {
+            const item = offeringsData.find(o => o.id === id);
+            return `<div class="offering-item" title="${item.name}">${item.icon}</div>`;
+        }).join('');
+    }
+
+    function toggleOffering(id) {
+        if (selectedOfferings.includes(id)) {
+            selectedOfferings = selectedOfferings.filter(i => i !== id);
+        } else {
+            if (selectedOfferings.length < 6) {
+                selectedOfferings.push(id);
+            } else {
+                alert('供台位置有限，最多同时上供 6 件供品！');
+            }
+        }
+        saveUserData();
+        renderSelector();
+        renderAltar();
+    }
+
+    function clearOfferings() {
+        selectedOfferings = [];
+        document.getElementById('wishInput').value = '';
+        localStorage.removeItem('cyberAltar_offerings');
+        localStorage.removeItem('cyberAltar_wish');
+        
+        renderSelector();
+        renderAltar();
+        document.getElementById('blessingText').innerText = "🙏 供台与愿望已清空，请重新挑选心仪的科研供品并许下新的愿望。";
+    }
+
+    function pray(event) {
+        merit = parseFloat((merit + 0.1).toFixed(2));
+        document.getElementById('meritCount').innerText = merit;
+        saveUserData();
+        createFloatingText(event);
+    }
+
+    function createFloatingText(event) {
+        const el = document.createElement('div');
+        el.className = 'float-text';
+
+        const randomPhrase = floatPhrases[Math.floor(Math.random() * floatPhrases.length)];
+        el.innerText = randomPhrase;
+
+        const x = event.clientX || (event.target.getBoundingClientRect().left + event.target.offsetWidth / 2);
+        const y = event.clientY || event.target.getBoundingClientRect().top;
+
+        el.style.left = `${x}px`;
+        el.style.top = `${y - 15}px`;
+
+        document.body.appendChild(el);
+
+        setTimeout(() => {
+            el.remove();
+        }, 800);
+    }
+
+    function drawFortune() {
+        const randomIdx = Math.floor(Math.random() * blessings.length);
+        document.getElementById('blessingText').innerText = blessings[randomIdx];
+    }
+
+    // 初始化运行
+    initUserWish();
+    renderSelector();
+    renderAltar();
+</script>
+</body>
+</html>
+",
         "【顺利】论文盲审高分通过，导师回复：'Отлично, отправляем в печать!'",
         "【显灵】莱考夫和韩礼德护体，理论框架无懈可击！"
     ];

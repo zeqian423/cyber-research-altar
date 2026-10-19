@@ -35,6 +35,7 @@
             padding: 24px;
             box-sizing: border-box;
             text-align: center;
+            position: relative;
         }
 
         h1 {
@@ -52,7 +53,7 @@
 
         .altar-display {
             position: relative;
-            height: 290px; /* 增加整体高度，给全息神明和香火充足空间 */
+            height: 290px;
             background: radial-gradient(circle, #1a1a3a 0%, #0d0d1a 100%);
             border: 2px solid var(--neon-pink);
             border-radius: 12px;
@@ -65,7 +66,6 @@
             padding-bottom: 20px;
         }
 
-        /* 赛博语言学十字架全息投影 */
         .cyber-deity-container {
             position: absolute;
             top: 10px;
@@ -100,10 +100,9 @@
             50% { transform: translateY(-5px); }
         }
 
-        /* 修复重叠：下移香火位置 */
         .incense-container {
             position: absolute;
-            top: 135px; /* 下移避开全息神明标签 */
+            top: 135px;
             display: flex;
             gap: 16px;
             z-index: 2;
@@ -165,12 +164,18 @@
             cursor: pointer;
             transition: all 0.2s;
             font-size: 0.9rem;
+            position: relative;
+            user-select: none;
         }
 
         .btn:hover {
             background: var(--neon-blue);
             color: #000;
             box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
         }
 
         .btn.active {
@@ -196,6 +201,7 @@
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px dashed rgba(255,255,255,0.1);
+            position: relative;
         }
 
         .stats {
@@ -212,6 +218,29 @@
             text-align: left;
             font-style: italic;
             min-height: 40px;
+        }
+
+        /* 敲木鱼漂浮文字样式 */
+        .float-text {
+            position: fixed;
+            pointer-events: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--neon-pink);
+            text-shadow: 0 0 8px var(--neon-pink), 0 0 12px var(--neon-gold);
+            z-index: 9999;
+            animation: floatUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50px) scale(1.3);
+            }
         }
     </style>
 </head>
@@ -266,7 +295,7 @@
     </div>
 
     <div class="action-area">
-        <button class="btn" style="border-color: var(--neon-pink);" onclick="pray()">敲木鱼 (+Accept)</button>
+        <button class="btn" style="border-color: var(--neon-pink);" onclick="pray(event)">敲木鱼 (+Accept)</button>
         <div class="stats">科研功德: <span id="meritCount">5.98</span></div>
         <button class="btn" style="border-color: var(--neon-gold);" onclick="drawFortune()">求科研签</button>
     </div>
@@ -298,6 +327,9 @@
         "【显灵】莱考夫和韩礼德护体，理论框架无懈可击！"
     ];
 
+    // 点击木鱼飘出的文字库
+    const floatPhrases = ["Accept +1", "Paper +1", "p < 0.05", "0 Bug", "功德 +1"];
+
     let selectedOfferings = ['paper', 'coffee', 'kvass', 'latiao'];
     let merit = 5.98;
 
@@ -314,7 +346,7 @@
     function renderAltar() {
         const table = document.getElementById('altarTable');
         if (selectedOfferings.length === 0) {
-            table.innerHTML = `<span style="color: #666; font-size: 0.9rem; font-style: italic;">供台空空如也，请选择上方贡品上供……</span>`;
+            table.innerHTML = `<span style="color: #666; font-size: 0.9rem; font-style: italic;">供台空空如也，请选择下方供品上供……</span>`;
             return;
         }
         table.innerHTML = selectedOfferings.map(id => {
@@ -344,9 +376,36 @@
         document.getElementById('blessingText').innerText = "🙏 供台已清空，请重新挑选心仪的科研供品向语言学全息之神上供。";
     }
 
-    function pray() {
+    function pray(event) {
+        // 增加功德值
         merit = parseFloat((merit + 0.1).toFixed(2));
         document.getElementById('meritCount').innerText = merit;
+
+        // 触发漂浮文字特效
+        createFloatingText(event);
+    }
+
+    function createFloatingText(event) {
+        const el = document.createElement('div');
+        el.className = 'float-text';
+
+        // 随机挑选词汇
+        const randomPhrase = floatPhrases[Math.floor(Math.random() * floatPhrases.length)];
+        el.innerText = randomPhrase;
+
+        // 计算定位（在点击位置上方飘出）
+        const x = event.clientX || (event.target.getBoundingClientRect().left + event.target.offsetWidth / 2);
+        const y = event.clientY || event.target.getBoundingClientRect().top;
+
+        el.style.left = `${x}px`;
+        el.style.top = `${y - 15}px`;
+
+        document.body.appendChild(el);
+
+        // 动画播放完后自动移除元素
+        setTimeout(() => {
+            el.remove();
+        }, 800);
     }
 
     function drawFortune() {
